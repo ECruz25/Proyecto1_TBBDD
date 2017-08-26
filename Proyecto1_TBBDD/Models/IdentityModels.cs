@@ -29,5 +29,7 @@ namespace Proyecto1_TBBDD.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<Proyecto1_TBBDD.urgency> urgencies { get; set; }
     }
 }

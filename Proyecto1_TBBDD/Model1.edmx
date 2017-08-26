@@ -1,0 +1,419 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Model.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.7" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="department">
+          <Key>
+            <PropertyRef Name="DepartmentID" />
+          </Key>
+          <Property Name="DepartmentID" Type="int" Nullable="false" />
+          <Property Name="DepartmentName" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="employee">
+          <Key>
+            <PropertyRef Name="EmployeeID" />
+            <PropertyRef Name="EmployeeType_EmployeeTypeID" />
+            <PropertyRef Name="Department_DepartmentID" />
+            <PropertyRef Name="User_UserID" />
+          </Key>
+          <Property Name="EmployeeID" Type="int" Nullable="false" />
+          <Property Name="EmployeeType_EmployeeTypeID" Type="int" Nullable="false" />
+          <Property Name="Department_DepartmentID" Type="int" Nullable="false" />
+          <Property Name="User_UserID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="employeetype">
+          <Key>
+            <PropertyRef Name="EmployeeTypeID" />
+          </Key>
+          <Property Name="EmployeeTypeID" Type="int" Nullable="false" />
+          <Property Name="EmployeeTypeName" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="incident">
+          <Key>
+            <PropertyRef Name="IncidentID" />
+            <PropertyRef Name="Urgency_UrgencyID" />
+            <PropertyRef Name="User_UserID" />
+            <PropertyRef Name="Employee_EmployeeID" />
+            <PropertyRef Name="Employee_Department_DepartmentID" />
+          </Key>
+          <Property Name="IncidentID" Type="int" Nullable="false" />
+          <Property Name="IncidentTitle" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="IncidentDescription" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="CreationDate" Type="date" Nullable="false" />
+          <Property Name="Status" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Urgency_UrgencyID" Type="int" Nullable="false" />
+          <Property Name="User_UserID" Type="int" Nullable="false" />
+          <Property Name="Employee_EmployeeID" Type="int" Nullable="false" />
+          <Property Name="Employee_Department_DepartmentID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="urgency">
+          <Key>
+            <PropertyRef Name="UrgencyID" />
+          </Key>
+          <Property Name="UrgencyID" Type="int" Nullable="false" />
+          <Property Name="UrgencyName" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="UrgencyDescription" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="LastActivity" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Birthday" Type="date" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_Employee_Department1">
+          <End Role="department" Type="Self.department" Multiplicity="1" />
+          <End Role="employee" Type="Self.employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="department">
+              <PropertyRef Name="DepartmentID" />
+            </Principal>
+            <Dependent Role="employee">
+              <PropertyRef Name="Department_DepartmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Employee_EmployeeType1">
+          <End Role="employeetype" Type="Self.employeetype" Multiplicity="1" />
+          <End Role="employee" Type="Self.employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employeetype">
+              <PropertyRef Name="EmployeeTypeID" />
+            </Principal>
+            <Dependent Role="employee">
+              <PropertyRef Name="EmployeeType_EmployeeTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Employee_User1">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="employee" Type="Self.employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="employee">
+              <PropertyRef Name="User_UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'fk_Incident_Employee1' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="fk_Incident_Employee1" />-->
+        <Association Name="fk_Incident_Urgency1">
+          <End Role="urgency" Type="Self.urgency" Multiplicity="1" />
+          <End Role="incident" Type="Self.incident" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="urgency">
+              <PropertyRef Name="UrgencyID" />
+            </Principal>
+            <Dependent Role="incident">
+              <PropertyRef Name="Urgency_UrgencyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Incident_User1">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="incident" Type="Self.incident" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="incident">
+              <PropertyRef Name="User_UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="department" EntityType="Self.department" Schema="mydb" store:Type="Tables" />
+          <EntitySet Name="employee" EntityType="Self.employee" Schema="mydb" store:Type="Tables" />
+          <EntitySet Name="employeetype" EntityType="Self.employeetype" Schema="mydb" store:Type="Tables" />
+          <EntitySet Name="incident" EntityType="Self.incident" Schema="mydb" store:Type="Tables" />
+          <EntitySet Name="urgency" EntityType="Self.urgency" Schema="mydb" store:Type="Tables" />
+          <EntitySet Name="user" EntityType="Self.user" Schema="mydb" store:Type="Tables" />
+          <AssociationSet Name="fk_Employee_Department1" Association="Self.fk_Employee_Department1">
+            <End Role="department" EntitySet="department" />
+            <End Role="employee" EntitySet="employee" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Employee_EmployeeType1" Association="Self.fk_Employee_EmployeeType1">
+            <End Role="employeetype" EntitySet="employeetype" />
+            <End Role="employee" EntitySet="employee" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Employee_User1" Association="Self.fk_Employee_User1">
+            <End Role="user" EntitySet="user" />
+            <End Role="employee" EntitySet="employee" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Incident_Urgency1" Association="Self.fk_Incident_Urgency1">
+            <End Role="urgency" EntitySet="urgency" />
+            <End Role="incident" EntitySet="incident" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Incident_User1" Association="Self.fk_Incident_User1">
+            <End Role="user" EntitySet="user" />
+            <End Role="incident" EntitySet="incident" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="department">
+          <Key>
+            <PropertyRef Name="DepartmentID" />
+          </Key>
+          <Property Name="DepartmentID" Type="Int32" Nullable="false" />
+          <Property Name="DepartmentName" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="employees" Relationship="Self.fk_Employee_Department1" FromRole="department" ToRole="employee" />
+        </EntityType>
+        <EntityType Name="employee">
+          <Key>
+            <PropertyRef Name="EmployeeID" />
+            <PropertyRef Name="EmployeeType_EmployeeTypeID" />
+            <PropertyRef Name="Department_DepartmentID" />
+            <PropertyRef Name="User_UserID" />
+          </Key>
+          <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+          <Property Name="EmployeeType_EmployeeTypeID" Type="Int32" Nullable="false" />
+          <Property Name="Department_DepartmentID" Type="Int32" Nullable="false" />
+          <Property Name="User_UserID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="department" Relationship="Self.fk_Employee_Department1" FromRole="employee" ToRole="department" />
+          <NavigationProperty Name="employeetype" Relationship="Self.fk_Employee_EmployeeType1" FromRole="employee" ToRole="employeetype" />
+          <NavigationProperty Name="user" Relationship="Self.fk_Employee_User1" FromRole="employee" ToRole="user" />
+        </EntityType>
+        <EntityType Name="employeetype">
+          <Key>
+            <PropertyRef Name="EmployeeTypeID" />
+          </Key>
+          <Property Name="EmployeeTypeID" Type="Int32" Nullable="false" />
+          <Property Name="EmployeeTypeName" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="employees" Relationship="Self.fk_Employee_EmployeeType1" FromRole="employeetype" ToRole="employee" />
+        </EntityType>
+        <EntityType Name="incident">
+          <Key>
+            <PropertyRef Name="IncidentID" />
+            <PropertyRef Name="Urgency_UrgencyID" />
+            <PropertyRef Name="User_UserID" />
+            <PropertyRef Name="Employee_EmployeeID" />
+            <PropertyRef Name="Employee_Department_DepartmentID" />
+          </Key>
+          <Property Name="IncidentID" Type="Int32" Nullable="false" />
+          <Property Name="IncidentTitle" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="IncidentDescription" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" />
+          <Property Name="Status" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Urgency_UrgencyID" Type="Int32" Nullable="false" />
+          <Property Name="User_UserID" Type="Int32" Nullable="false" />
+          <Property Name="Employee_EmployeeID" Type="Int32" Nullable="false" />
+          <Property Name="Employee_Department_DepartmentID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="urgency" Relationship="Self.fk_Incident_Urgency1" FromRole="incident" ToRole="urgency" />
+          <NavigationProperty Name="user" Relationship="Self.fk_Incident_User1" FromRole="incident" ToRole="user" />
+        </EntityType>
+        <EntityType Name="urgency">
+          <Key>
+            <PropertyRef Name="UrgencyID" />
+          </Key>
+          <Property Name="UrgencyID" Type="Int32" Nullable="false" />
+          <Property Name="UrgencyName" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UrgencyDescription" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="incidents" Relationship="Self.fk_Incident_Urgency1" FromRole="urgency" ToRole="incident" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastActivity" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Birthday" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="employees" Relationship="Self.fk_Employee_User1" FromRole="user" ToRole="employee" />
+          <NavigationProperty Name="incidents" Relationship="Self.fk_Incident_User1" FromRole="user" ToRole="incident" />
+        </EntityType>
+        <Association Name="fk_Employee_Department1">
+          <End Role="department" Type="Self.department" Multiplicity="1" />
+          <End Role="employee" Type="Self.employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="department">
+              <PropertyRef Name="DepartmentID" />
+            </Principal>
+            <Dependent Role="employee">
+              <PropertyRef Name="Department_DepartmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Employee_EmployeeType1">
+          <End Role="employeetype" Type="Self.employeetype" Multiplicity="1" />
+          <End Role="employee" Type="Self.employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employeetype">
+              <PropertyRef Name="EmployeeTypeID" />
+            </Principal>
+            <Dependent Role="employee">
+              <PropertyRef Name="EmployeeType_EmployeeTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Employee_User1">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="employee" Type="Self.employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="employee">
+              <PropertyRef Name="User_UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Incident_Urgency1">
+          <End Role="urgency" Type="Self.urgency" Multiplicity="1" />
+          <End Role="incident" Type="Self.incident" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="urgency">
+              <PropertyRef Name="UrgencyID" />
+            </Principal>
+            <Dependent Role="incident">
+              <PropertyRef Name="Urgency_UrgencyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Incident_User1">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="incident" Type="Self.incident" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="incident">
+              <PropertyRef Name="User_UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entity" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="departments" EntityType="Self.department" />
+          <EntitySet Name="employees" EntityType="Self.employee" />
+          <EntitySet Name="employeetypes" EntityType="Self.employeetype" />
+          <EntitySet Name="incidents" EntityType="Self.incident" />
+          <EntitySet Name="urgencies" EntityType="Self.urgency" />
+          <EntitySet Name="users" EntityType="Self.user" />
+          <AssociationSet Name="fk_Employee_Department1" Association="Self.fk_Employee_Department1">
+            <End Role="department" EntitySet="departments" />
+            <End Role="employee" EntitySet="employees" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Employee_EmployeeType1" Association="Self.fk_Employee_EmployeeType1">
+            <End Role="employeetype" EntitySet="employeetypes" />
+            <End Role="employee" EntitySet="employees" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Employee_User1" Association="Self.fk_Employee_User1">
+            <End Role="user" EntitySet="users" />
+            <End Role="employee" EntitySet="employees" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Incident_Urgency1" Association="Self.fk_Incident_Urgency1">
+            <End Role="urgency" EntitySet="urgencies" />
+            <End Role="incident" EntitySet="incidents" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Incident_User1" Association="Self.fk_Incident_User1">
+            <End Role="user" EntitySet="users" />
+            <End Role="incident" EntitySet="incidents" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entity">
+          <EntitySetMapping Name="departments">
+            <EntityTypeMapping TypeName="Model.department">
+              <MappingFragment StoreEntitySet="department">
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="employees">
+            <EntityTypeMapping TypeName="Model.employee">
+              <MappingFragment StoreEntitySet="employee">
+                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+                <ScalarProperty Name="EmployeeType_EmployeeTypeID" ColumnName="EmployeeType_EmployeeTypeID" />
+                <ScalarProperty Name="Department_DepartmentID" ColumnName="Department_DepartmentID" />
+                <ScalarProperty Name="User_UserID" ColumnName="User_UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="employeetypes">
+            <EntityTypeMapping TypeName="Model.employeetype">
+              <MappingFragment StoreEntitySet="employeetype">
+                <ScalarProperty Name="EmployeeTypeID" ColumnName="EmployeeTypeID" />
+                <ScalarProperty Name="EmployeeTypeName" ColumnName="EmployeeTypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="incidents">
+            <EntityTypeMapping TypeName="Model.incident">
+              <MappingFragment StoreEntitySet="incident">
+                <ScalarProperty Name="IncidentID" ColumnName="IncidentID" />
+                <ScalarProperty Name="IncidentTitle" ColumnName="IncidentTitle" />
+                <ScalarProperty Name="IncidentDescription" ColumnName="IncidentDescription" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Urgency_UrgencyID" ColumnName="Urgency_UrgencyID" />
+                <ScalarProperty Name="User_UserID" ColumnName="User_UserID" />
+                <ScalarProperty Name="Employee_EmployeeID" ColumnName="Employee_EmployeeID" />
+                <ScalarProperty Name="Employee_Department_DepartmentID" ColumnName="Employee_Department_DepartmentID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="urgencies">
+            <EntityTypeMapping TypeName="Model.urgency">
+              <MappingFragment StoreEntitySet="urgency">
+                <ScalarProperty Name="UrgencyID" ColumnName="UrgencyID" />
+                <ScalarProperty Name="UrgencyName" ColumnName="UrgencyName" />
+                <ScalarProperty Name="UrgencyDescription" ColumnName="UrgencyDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="Model.user">
+              <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="LastActivity" ColumnName="LastActivity" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
