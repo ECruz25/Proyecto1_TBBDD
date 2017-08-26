@@ -24,7 +24,7 @@ namespace Proyecto1_TBBDD
         public int Employee_EmployeeID { get; set; }
         public int Employee_Department_DepartmentID { get; set; }
     
-        public virtual urgency urgency { get; set; }
+        //public virtual urgency urgency { get; set; }
         public virtual user user { get; set; }
     }
 }

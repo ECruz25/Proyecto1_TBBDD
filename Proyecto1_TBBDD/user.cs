@@ -11,7 +11,8 @@ namespace Proyecto1_TBBDD
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class user
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,12 +21,22 @@ namespace Proyecto1_TBBDD
             this.employees = new HashSet<employee>();
             this.incidents = new HashSet<incident>();
         }
-    
+        
         public int UserID { get; set; }
+
+        [Required]
+        [Display(Name = "Correo electronico")]
+        [EmailAddress(ErrorMessage = "Correo electronico invalido")]
         public string Email { get; set; }
+        [Required]
         public string Password { get; set; }
         public System.DateTime LastActivity { get; set; }
+        [Required]
+        [Display(Name = "Nombre Completo")]
         public string Name { get; set; }
+        [Required]
+        [Display(Name = "Fecha de Nacimiento")]
+        [DataType(DataType.Date)]
         public System.DateTime Birthday { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
